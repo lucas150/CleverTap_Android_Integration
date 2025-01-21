@@ -12,7 +12,7 @@
 
     <application
             android:label="@string/app_name"
-            android:name="com.clevertap.android.sdk.Application"
+            android:name=".CTapp"
             android:allowBackup="true"
             android:dataExtractionRules="@xml/data_extraction_rules"
             android:fullBackupContent="@xml/backup_rules"
@@ -39,7 +39,7 @@
                 android:name="CLEVERTAP_TOKEN"
                 android:value="TEST-31a-b24"/>
             <!-- IMPORTANT: To force use Google AD ID to uniquely identify  users, use the following meta tag. GDPR mandates that if you are using this tag, there is prominent disclousure to your end customer in their application. Read more about GDPR here - https://clevertap.com/blog/in-preparation-of-gdpr-compliance/ -->
-            <meta-data
+            <meta-data  
                 android:name="CLEVERTAP_USE_GOOGLE_AD_ID"
                 android:value="1"/>
 

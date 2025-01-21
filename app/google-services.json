@@ -1,13 +1,32 @@
 {
   "project_info": {
-    "project_number": "240699622411",
-    "project_id": "testpush-6d620",
-    "storage_bucket": "testpush-6d620.firebasestorage.app"
+    "project_number": "955490297899",
+    "project_id": "workshopclevertap16012025",
+    "storage_bucket": "workshopclevertap16012025.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:240699622411:android:dcf2c7cce247e02dff330e",
+        "mobilesdk_app_id": "1:955490297899:android:2cafc921229240e4dbe26e",
+        "android_client_info": {
+          "package_name": "com.example.clvertap_workshop_1612025"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNdJr5BLesIA4AE61yDGfy5aTQ4TKYCqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955490297899:android:6c809ff74a7a4be5dbe26e",
         "android_client_info": {
           "package_name": "com.henil.test_push"
         }
@@ -15,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCe2J3IYDwVjS55QJxXnjBdNzp7unuH2w0"
+          "current_key": "AIzaSyCNdJr5BLesIA4AE61yDGfy5aTQ4TKYCqQ"
         }
       ],
       "services": {
