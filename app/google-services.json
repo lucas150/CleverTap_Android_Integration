@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "955490297899",
-    "project_id": "workshopclevertap16012025",
-    "storage_bucket": "workshopclevertap16012025.firebasestorage.app"
+    "project_number": "405605804536",
+    "project_id": "clevertapflutter",
+    "storage_bucket": "clevertapflutter.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:955490297899:android:2cafc921229240e4dbe26e",
+        "mobilesdk_app_id": "1:405605804536:android:f8f5824323edfe411e4e0d",
         "android_client_info": {
-          "package_name": "com.example.clvertap_workshop_1612025"
+          "package_name": "com.example.clevertap_flutter_app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCNdJr5BLesIA4AE61yDGfy5aTQ4TKYCqQ"
+          "current_key": "AIzaSyApkRIIxoe3x2AFr8TB3yV6jRSiyY3up8I"
         }
       ],
       "services": {
@@ -26,7 +26,7 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:955490297899:android:6c809ff74a7a4be5dbe26e",
+        "mobilesdk_app_id": "1:405605804536:android:4af7b33dcbf49cf21e4e0d",
         "android_client_info": {
           "package_name": "com.henil.test_push"
         }
@@ -34,7 +34,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCNdJr5BLesIA4AE61yDGfy5aTQ4TKYCqQ"
+          "current_key": "AIzaSyApkRIIxoe3x2AFr8TB3yV6jRSiyY3up8I"
         }
       ],
       "services": {
