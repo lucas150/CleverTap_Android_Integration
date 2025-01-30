@@ -174,24 +174,6 @@
 //
 //
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package com.henil.test_push;
 
 import android.location.Location;
@@ -215,12 +197,11 @@ import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 import java.util.ArrayList;
 
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public class MainActivity extends AppCompatActivity implements CTInboxListener,DisplayUnitListener {
+public class MainActivity extends AppCompatActivity implements CTInboxListener, DisplayUnitListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,11 +228,12 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
 
             // User profile setup
             HashMap<String, Object> profileUpdate = new HashMap<>();
-            profileUpdate.put("Name", "Henil Gandhi");
-            profileUpdate.put("Identity", 300);
-            profileUpdate.put("Email", "henil@clevertap.com");
-            profileUpdate.put("Phone", "+919769660756");
+            profileUpdate.put("Name", "Vaibhav");
+            profileUpdate.put("Identity", 38885);
+            profileUpdate.put("Email", "he1yuj@clevertap.com");
+            profileUpdate.put("Phone", "+9197660712536");
             profileUpdate.put("Gender", "M");
+            profileUpdate.put("Prefered Language", "French");
             profileUpdate.put("DOB", new Date());
 
             profileUpdate.put("MSG-email", true);
@@ -266,17 +248,40 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
             profileUpdate.put("MyStuff", stuff);
 
             // Update user profile in CleverTap
-            clevertapDefaultInstance.onUserLogin(profileUpdate);
+           clevertapDefaultInstance.onUserLogin(profileUpdate);
 
             // Profile push with updated list
             ArrayList<String> otherStuffList = new ArrayList<>();
             otherStuffList.add("Jeans");
             otherStuffList.add("Perfume");
             profileUpdate.put("MyStuff", otherStuffList);
-            clevertapDefaultInstance.pushProfile(profileUpdate);
+            //clevertapDefaultInstance.pushProfile(profileUpdate);
 
             // Send an event to CleverTap
             clevertapDefaultInstance.pushEvent("Product viewed");
+
+            // event with properties
+            HashMap<String, Object> prodViewedAction = new HashMap<String, Object>();
+            prodViewedAction.put("Product Name", "Casio Chronograph Watch");
+            prodViewedAction.put("Category", "Mens Accessories");
+            prodViewedAction.put("Price", 59.99);
+            prodViewedAction.put("EndDate", "$D_1738125118");
+
+            clevertapDefaultInstance.pushEvent("Product2", prodViewedAction);
+            clevertapDefaultInstance.pushEvent("ImageURL");
+            /**
+             * Data types
+             * The value of a property can be of type Date (java.util.Date), an Integer, a
+             * Long, a Double,
+             * a Float, a Character, a String, or a Boolean.
+             *
+             * Date object
+             * When a property value is of type Date, the date and time are both recorded to
+             * the second.
+             * This can be later used for targeting scenarios.
+             * For e.g. if you are recording the time of the flight as an event property,
+             * you can send a message to the user just before their flight takes off.
+             */
 
             // Find buttons by ID
             Button buttonPush = findViewById(R.id.buttonPush);
@@ -305,10 +310,11 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
 
             buttonProfileUpdate.setOnClickListener(v -> {
                 HashMap<String, Object> updatedProfile = new HashMap<>();
-                updatedProfile.put("Name", "B");
-                updatedProfile.put("Identity", 2);
-                updatedProfile.put("Email", "new@clevertap.com");
-//                updatedProfile.put("Phone", "+919876543210");
+                updatedProfile.put("Name", "Vaibhav");
+                updatedProfile.put("Identity", 4865);
+                updatedProfile.put("Prefered Language", "English");
+                updatedProfile.put("Email", "naadk@clevertap.com");
+                updatedProfile.put("Phone", "+91987654289");
                 updatedProfile.put("Gender", "M");
                 updatedProfile.put("DOB", new Date());
 
@@ -320,13 +326,13 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
                 clevertapDefaultInstance.onUserLogin(updatedProfile);
             });
 
-
             buttonProfileUpdate2.setOnClickListener(v -> {
                 HashMap<String, Object> updatedProfile = new HashMap<>();
-                updatedProfile.put("Name", "C");
-                updatedProfile.put("Identity", 3);
-//                updatedProfile.put("Email", "new@clevertap.com");
-                updatedProfile.put("Phone", "+91123456754");
+                updatedProfile.put("Name", "Vaibhav2");
+                updatedProfile.put("Identity", 4865);
+                updatedProfile.put("Email", "naadk@clevertap.com");
+                updatedProfile.put("Phone", "+91987654289");
+                updatedProfile.put("Prefered Language", "Hindi");
                 updatedProfile.put("Gender", "M");
                 updatedProfile.put("DOB", new Date());
 
@@ -335,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
                 updatedStuff.add("Sunglasses");
                 updatedProfile.put("MyStuff", updatedStuff);
 
-                clevertapDefaultInstance.onUserLogin(updatedProfile);
+                clevertapDefaultInstance.pushProfile(updatedProfile);
             });
 
             // Handle location if available
@@ -384,5 +390,3 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener,D
         }
     }
 }
-
-

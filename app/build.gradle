@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.henil.test_push"
-        minSdk 24
+        minSdk 26
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -47,7 +47,7 @@ dependencies {
 //  for push and inapp
     implementation 'androidx.core:core:1.13.0'
     implementation 'com.google.firebase:firebase-messaging:23.1.2'
-    implementation 'com.clevertap.android:clevertap-android-sdk:6.2.1'
+    implementation 'com.clevertap.android:clevertap-android-sdk:7.2.2'
     implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-analytics'
 
