@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
     private FusedLocationProviderClient fusedLocationClient;
     private CoordinatorLayout coordinatorLayout;
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
+    private static final int RECORD_AUDIO_PERMISSION_CODE = 101;
 
     CleverTapAPI clevertapDefaultInstance;
 
@@ -179,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
 
 
 
+
             CheckBox checkEmail = findViewById(R.id.checkEmail);
             CheckBox checkSMS = findViewById(R.id.checkSMS);
             CheckBox checkWhatsApp = findViewById(R.id.checkWhatsApp);
@@ -234,6 +236,24 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
                 clevertapDefaultInstance.setLocation(location);
             }
         }
+        Button btnCall = findViewById(R.id.call);
+        btnCall.setOnClickListener(v->{
+                if (ContextCompat.checkSelfPermission(
+                        MainActivity.this, Manifest.permission.RECORD_AUDIO
+                ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[]{Manifest.permission.RECORD_AUDIO},
+                            RECORD_AUDIO_PERMISSION_CODE
+                    );
+                    Toast.makeText(MainActivity.this, "Microphone permission required", Toast.LENGTH_SHORT).show();
+                } else {
+                    SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
+                }
+
+        });
+
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -338,3 +358,12 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
         }
     }
 }
+
+
+
+
+
+
+
+
+
