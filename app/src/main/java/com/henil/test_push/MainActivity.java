@@ -238,20 +238,23 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
         }
         Button btnCall = findViewById(R.id.call);
         btnCall.setOnClickListener(v->{
-                if (ContextCompat.checkSelfPermission(
-                        MainActivity.this, Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(
-                            MainActivity.this,
-                            new String[]{Manifest.permission.RECORD_AUDIO},
-                            RECORD_AUDIO_PERMISSION_CODE
-                    );
-                    Toast.makeText(MainActivity.this, "Microphone permission required", Toast.LENGTH_SHORT).show();
-                } else {
-                    SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
-                }
-
+            SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
         });
+//        btnCall.setOnClickListener(v->{
+//                if (ContextCompat.checkSelfPermission(
+//                        MainActivity.this, Manifest.permission.RECORD_AUDIO
+//                ) != PackageManager.PERMISSION_GRANTED) {
+//                    ActivityCompat.requestPermissions(
+//                            MainActivity.this,
+//                            new String[]{Manifest.permission.RECORD_AUDIO},
+//                            RECORD_AUDIO_PERMISSION_CODE
+//                    );
+//                    Toast.makeText(MainActivity.this, "Microphone permission required", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
+//                }
+//
+//        });
 
 
     }
