@@ -74,21 +74,23 @@
             android:id="@+id/in_app_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="In-App 3"
+            android:text="Charged"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/in_app_2" />
+
+        <!-- Checkboxes for DND Preferences -->
 
         <Button
             android:id="@+id/in_app_4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:text="In-App 4"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/in_app_3" />
-
-        <!-- Checkboxes for DND Preferences -->
 
         <Button
             android:id="@+id/inbox"
@@ -142,11 +144,11 @@
             app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
         <Button
-            android:id="@+id/buttonProfileUpdate2"
+            android:id="@+id/custominbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Update Profile 2"
+            android:text="Custom Inbox"
             app:layout_constraintEnd_toStartOf="@+id/nativedisplay"
             app:layout_constraintHorizontal_bias="0.352"
             app:layout_constraintStart_toStartOf="parent"
@@ -170,7 +172,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/nativedisplay" />
+            app:layout_constraintTop_toBottomOf="@id/nativedisplay"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/cache"
@@ -191,10 +194,21 @@
             android:text="call"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/in_app_3"
-            app:layout_constraintHorizontal_bias="0.384"
+            app:layout_constraintHorizontal_bias="0.238"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.374" />
+            app:layout_constraintVertical_bias="0.035" />
+
+        <Button
+            android:id="@+id/view2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="view2"
+            app:layout_constraintBottom_toTopOf="@+id/cache"
+            app:layout_constraintEnd_toStartOf="@+id/in_app_2"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/call" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

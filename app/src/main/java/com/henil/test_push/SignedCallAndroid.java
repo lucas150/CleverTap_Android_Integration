@@ -31,8 +31,8 @@ public class SignedCallAndroid {
 
         JSONObject initOptions = new JSONObject();
         try {
-            initOptions.put("accountId", "6568502216033fcfba4cfc76");
-            initOptions.put("apiKey", "uXFsHxBseCIUgDqU5kKLpgLR6KO7ZUmY5ObZqs1p5ox4vlxxTKxfHUiewEhCZgTN");
+            initOptions.put("accountId", "");
+            initOptions.put("apiKey", "");
             initOptions.put("cuid", "ct_henil");
             initOptions.put("appId", BuildConfig.APPLICATION_ID);
             initOptions.put("name", "ct_henil");

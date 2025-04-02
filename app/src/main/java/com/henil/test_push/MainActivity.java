@@ -33,6 +33,8 @@ import com.clevertap.android.sdk.CTInboxListener;
 import com.clevertap.android.sdk.CTInboxStyleConfig;
 import com.clevertap.android.sdk.CleverTapAPI;
 
+import com.clevertap.android.sdk.InAppNotificationButtonListener;
+import com.clevertap.android.sdk.InboxMessageListener;
 import com.clevertap.android.sdk.displayunits.DisplayUnitListener;
 import com.clevertap.android.sdk.displayunits.model.CleverTapDisplayUnit;
 
@@ -47,6 +49,11 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.clevertap.android.sdk.inbox.CTInboxMessage;
+import com.clevertap.android.sdk.inbox.CTInboxMessageContent;
+import com.clevertap.android.sdk.pushnotification.CTPushNotificationListener;
+import com.clevertap.android.sdk.pushnotification.amp.CTPushAmpListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -55,9 +62,10 @@ import com.google.android.material.snackbar.Snackbar;
 
 import android.location.Location;
 
+import org.json.JSONObject;
 
 
-public class MainActivity extends AppCompatActivity implements CTInboxListener, DisplayUnitListener {
+public class MainActivity extends AppCompatActivity implements CTInboxListener, DisplayUnitListener, InAppNotificationButtonListener, InboxMessageListener, CTPushNotificationListener {
     private FusedLocationProviderClient fusedLocationClient;
     private CoordinatorLayout coordinatorLayout;
     private static final int LOCATION_PERMISSION_REQUEST = 1001;
@@ -68,9 +76,11 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Initialize CleverTap
         clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(getApplicationContext());
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+//        clevertapDefaultInstance.suspendInAppNotifications();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             requestLocation();  // Fetch and update location
@@ -80,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
 
         clevertapDefaultInstance.setDisplayUnitListener(this);
         // Initialize fusedLocationClient before any usage
+//        cleverTapInstance.setInAppNotificationButtonListener(this);
 
         setContentView(R.layout.activity_main);
 
@@ -98,40 +109,14 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
         if (clevertapDefaultInstance != null) {
             clevertapDefaultInstance.setCTNotificationInboxListener(this);
             clevertapDefaultInstance.initializeInbox();
+            clevertapDefaultInstance.setInAppNotificationButtonListener(this);
+            clevertapDefaultInstance.setCTInboxMessageListener(this);
+            clevertapDefaultInstance.setCTPushNotificationListener(this);
 
-            // User profile setup
-            HashMap<String, Object> profileUpdate = new HashMap<>();
-            profileUpdate.put("Name", "Vaibhav");
-                profileUpdate.put("Identity", 6769769);
-            profileUpdate.put("Email", "newuser2@gmail.com");
-            profileUpdate.put("Phone", "+9197660712536");
-            profileUpdate.put("Gender", "M");
-            profileUpdate.put("Prefered Language", "French");
-            profileUpdate.put("DOB", new Date());
 
-            profileUpdate.put("MSG-email", true);
-            profileUpdate.put("MSG-push", true);
-            profileUpdate.put("MSG-sms", true);
-            profileUpdate.put("MSG-whatsapp", true);
-
-            // Define a list of items
-            ArrayList<String> stuff = new ArrayList<>();
-            stuff.add("bag");
-            stuff.add("shoes");
-            profileUpdate.put("MyStuff", stuff);
-
-            // Update user profile in CleverTap
-           clevertapDefaultInstance.onUserLogin(profileUpdate);
-
-            // Profile push with updated list
-            ArrayList<String> otherStuffList = new ArrayList<>();
-            otherStuffList.add("Jeans");
-            otherStuffList.add("Perfume");
-            profileUpdate.put("MyStuff", otherStuffList);
-            //clevertapDefaultInstance.pushProfile(profileUpdate);
-
+        }
             // Send an event to CleverTap
-            clevertapDefaultInstance.pushEvent("Product viewed");
+//            clevertapDefaultInstance.pushEvent("Product viewed");
 
             // event with properties
             HashMap<String, Object> prodViewedAction = new HashMap<String, Object>();
@@ -141,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
             prodViewedAction.put("EndDate", "$D_1738125118");
 
             clevertapDefaultInstance.pushEvent("Product2", prodViewedAction);
-            clevertapDefaultInstance.pushEvent("ImageURL");
+//            clevertapDefaultInstance.pushEvent("ImageURL");
 
 
             // Find buttons by ID
@@ -151,23 +136,52 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
             Button in_app_2 = findViewById(R.id.in_app_2);
             Button in_app_3 = findViewById(R.id.in_app_3);
             Button in_app_4 = findViewById(R.id.in_app_4);
-            Button inbox = findViewById(R.id.inbox);
             Button buttonProfileUpdate = findViewById(R.id.buttonProfileUpdate);
-            Button buttonProfileUpdate2 = findViewById(R.id.buttonProfileUpdate2);
+            Button CustomInbox = findViewById(R.id.custominbox);
             Button nativeDisplay = findViewById(R.id.nativedisplay);
             Button cache = findViewById(R.id.cache);
 
-            // Set click listeners for each button
+
+
+        HashMap<String, Object> chargeDetails = new HashMap<String, Object>();
+        chargeDetails.put("Amount", 300);
+        chargeDetails.put("Payment Mode", "Credit card");
+        chargeDetails.put("Charged ID", 24052013);
+        chargeDetails.put("Category", "Cash");
+
+        HashMap<String, Object> item1 = new HashMap<String, Object>();
+        item1.put("Product category", "books");
+        item1.put("L3 Category", "Books");
+        item1.put("Book name", "The Millionaire next door");
+        item1.put("Quantity", 1);
+
+        HashMap<String, Object> item2 = new HashMap<String, Object>();
+        item2.put("Product category", "Shoes");
+        item2.put("L3 Category", "Shoes");
+        item2.put("Puma", "Shoes");
+        item2.put("Quantity", 1);
+
+        HashMap<String, Object> item3 = new HashMap<String, Object>();
+        item3.put("Product category", "Watches");
+        item3.put("L3 Category", "Watches");
+        item3.put("Titan", "Chuck it, let's do it");
+        item3.put("Quantity", 5);
+
+        ArrayList<HashMap<String, Object>> items = new ArrayList<HashMap<String, Object>>();
+        items.add(item1);
+        items.add(item2);
+        items.add(item3);
+
+
+        // Set click listeners for each button
             buttonPush.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("Push Notification Triggered"));
             buttonInApp.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("In-app Notification Triggered"));
             buttonCustom.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("Custom Notification Triggered"));
             in_app_2.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("In-app_2 Notification Triggered"));
-            in_app_3.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("In-app_3 Notification Triggered"));
-            in_app_4.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("In-app_4 Notification Triggered"));
-            inbox.setOnClickListener(v -> {
-                clevertapDefaultInstance.pushEvent("inbox"); // Track inbox open event
-                clevertapDefaultInstance.showAppInbox();
-            });
+            in_app_3.setOnClickListener(v -> clevertapDefaultInstance.pushChargedEvent(chargeDetails, items));
+
+        in_app_4.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("In-app_4 Notification Triggered"));
+
             nativeDisplay.setOnClickListener(v -> clevertapDefaultInstance.pushEvent("Native Display"));
             cache.setOnClickListener(v -> {
                 Log.d("CleverTap", "CT_ID Before App Data clear   ➡️  "+clevertapDefaultInstance.getCleverTapID());
@@ -175,7 +189,10 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
                 Log.d("CleverTap", "CT_ID After App Data clear   ➡️  "+clevertapDefaultInstance.getCleverTapID());
 
             });
-
+            CustomInbox.setOnClickListener(v->{
+                Intent customIntent = new Intent(MainActivity.this,CustomInbox.class);
+                startActivity(customIntent);
+            });
 
 
 
@@ -184,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
             CheckBox checkEmail = findViewById(R.id.checkEmail);
             CheckBox checkSMS = findViewById(R.id.checkSMS);
             CheckBox checkWhatsApp = findViewById(R.id.checkWhatsApp);
+         //   clevertapDefaultInstance.getCTPushAmpListener();
 
             long temp2 = 1978594685790783689L;
 //            clevertapDefaultInstance.pushEvent(temp2"");
@@ -191,9 +209,9 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
             {
                 HashMap<String, Object> updatedProfile = new HashMap<>();
                 updatedProfile.put("Name", "Vaibhav");
-                updatedProfile.put("Identity", 7697674);
+                updatedProfile.put("Identity", 94);
                 updatedProfile.put("Prefered Language", "English");
-//                updatedProfile.put("Email", "newuser@gmail.com");
+                updatedProfile.put("Email", "test12345@gmail.com");
 //                updatedProfile.put("Phone", "+919876542089");
                 updatedProfile.put("Gender", "M");
                 updatedProfile.put("DOB", new Date());
@@ -209,53 +227,27 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
 //                updatedProfile.put("MSG-dndPhone", checkSMS.isChecked());
                 updatedProfile.put("MSG-dndWhatsApp", checkWhatsApp.isChecked());
 
-                clevertapDefaultInstance.onUserLogin(updatedProfile);
+//                clevertapDefaultInstance.onUserLogin(updatedProfile,"123345");
             });
 
-            buttonProfileUpdate2.setOnClickListener(v -> {
-                HashMap<String, Object> updatedProfile = new HashMap<>();
-                updatedProfile.put("name", "Vhav2");
-                updatedProfile.put("identity", 97674);
-                updatedProfile.put("email", "hakjl@clevertap.com");
-                updatedProfile.put("Phone", "+91987654289");
-                updatedProfile.put("Prefered Language", "Hindi");
-                updatedProfile.put("Gender", "M");
-                updatedProfile.put("DOB", new Date());
 
-                ArrayList<String> updatedStuff = new ArrayList<>();
-                updatedStuff.add("Watch");
-                updatedStuff.add("Sunglasses");
-                updatedProfile.put("MyStuff", updatedStuff);
 
-                clevertapDefaultInstance.onUserLogin(updatedProfile);
-            });
-
-            // Handle location if available
-            Location location = clevertapDefaultInstance.getLocation();
-            if (location != null) {
+        Location location = new Location("");
+        location.setLatitude(19.110000);
+        location.setLongitude(72.850000);
+        if (location != null) {
                 clevertapDefaultInstance.setLocation(location);
             }
-        }
+
         Button btnCall = findViewById(R.id.call);
         btnCall.setOnClickListener(v->{
             SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
         });
-//        btnCall.setOnClickListener(v->{
-//                if (ContextCompat.checkSelfPermission(
-//                        MainActivity.this, Manifest.permission.RECORD_AUDIO
-//                ) != PackageManager.PERMISSION_GRANTED) {
-//                    ActivityCompat.requestPermissions(
-//                            MainActivity.this,
-//                            new String[]{Manifest.permission.RECORD_AUDIO},
-//                            RECORD_AUDIO_PERMISSION_CODE
-//                    );
-//                    Toast.makeText(MainActivity.this, "Microphone permission required", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    SignedCallAndroid.makeSignedCall(getApplicationContext(), "johndoe", "Test CleverTap Call");
-//                }
-//
-//        });
-
+        Button view2 = findViewById(R.id.view2);
+        view2.setOnClickListener(v->{
+            Intent intent = new Intent(MainActivity.this,SecondActivity.class);
+            startActivity(intent);
+        });
 
     }
 
@@ -271,16 +263,45 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
     @Override
     public void inboxDidInitialize() {
         CleverTapAPI clevertapDefaultInstance = CleverTapAPI.getDefaultInstance(this);
+        Button inbox = findViewById(R.id.inbox);
+        inbox.setOnClickListener(v -> {
+            clevertapDefaultInstance.pushEvent("inbox");
+//            clevertapDefaultInstance.pushEvent("Custom Event");
         if (clevertapDefaultInstance != null) {
             ArrayList<String> tabs = new ArrayList<>();
             tabs.add("Promotions");
-            tabs.add("Offers");
+            tabs.add("Default");
 
             CTInboxStyleConfig styleConfig = new CTInboxStyleConfig();
             styleConfig.setTabs(tabs);
             styleConfig.setNavBarTitle("MY INBOX");
 
             clevertapDefaultInstance.showAppInbox(styleConfig);
+//            clevertapDefaultInstance.showAppInbox();
+        }
+        });
+    }
+
+    @Override
+    public void onInboxItemClicked(CTInboxMessage message, int contentPageIndex, int buttonIndex){
+        Log.i("CleverTap", "InboxItemClicked at page-index " + contentPageIndex + " with button-index " + buttonIndex);
+
+        //The contentPageIndex corresponds to the page index of the content, which ranges from 0 to the total number of pages for carousel templates. For non-carousel templates, the value is always 0, as they only have one page of content.
+        CTInboxMessageContent messageContentObject = message.getInboxMessageContents().get(contentPageIndex);
+
+        //The buttonIndex corresponds to the CTA button clicked (0, 1, or 2). A value of -1 indicates the app inbox body/message clicked.
+        if (buttonIndex != -1) {
+            //button is clicked
+            try {
+                JSONObject buttonObject = (JSONObject) messageContentObject.getLinks().get(buttonIndex);
+                String buttonType = buttonObject.getString("type");
+                Log.i("CleverTap", "type of button clicked: " + buttonType);
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        } else {
+            //item is clicked
+            Log.i("CleverTap", "type/template of App Inbox item:" + message);
         }
     }
 
@@ -299,16 +320,16 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
                     String imageUrl = unit.getContents().get(0).getMedia();
 
                     // ✅ Corrected: Extract the actual update message
-                    String updateMessage = unit.getCustomExtras().get("update_alert");
+//                    String updateMessage = unit.getCustomExtras().get("update_alert");
 
                     // Load Image into ImageView
                     ImageView imageView = findViewById(R.id.native_image);
                     Glide.with(this).load(imageUrl).into(imageView);
 
                     // ✅ Show Snackbar if an update message exists
-                    if (updateMessage != null && !updateMessage.isEmpty()) {
-                        showSnackbar(updateMessage);
-                    }
+//                    if (updateMessage != null && !updateMessage.isEmpty()) {
+//                        showSnackbar(updateMessage);
+//                    }
                 }
             }
         }
@@ -359,6 +380,18 @@ public class MainActivity extends AppCompatActivity implements CTInboxListener, 
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onInAppButtonClick(HashMap<String, String> hashMap) {
+        clevertapDefaultInstance.pushEvent("Test");
+        Log.d("CleverTap", "Payload" + hashMap.toString());
+
+    }
+
+    @Override
+    public void onNotificationClickedPayloadReceived(HashMap<String, Object> hashMap) {
+        Log.d("CleverTap", "onNotificationClickedPayloadReceived: ");
     }
 }
 
